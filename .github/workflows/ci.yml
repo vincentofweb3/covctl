@@ -1,0 +1,29 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install test dependency
+        run: python -m pip install --upgrade pip pytest
+      - name: Tests
+        run: python -m pytest -q
+      - name: Lint the shipped example
+        run: python covctl.py lint examples/covenant.md --strict
+      - name: Digest is the pinned, on-chain value
+        run: |
+          python covctl.py digest examples/covenant.md \
+            | grep -qx afd824702fd05cd7c277adf84d8d1c9feba669eeda8ba50681b67259d363837b

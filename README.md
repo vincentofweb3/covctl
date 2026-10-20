@@ -1,5 +1,7 @@
 # covctl
 
+[![ci](https://github.com/vincentofweb3/covctl/actions/workflows/ci.yml/badge.svg)](https://github.com/vincentofweb3/covctl/actions/workflows/ci.yml)
+
 A covenant compiler, policy linter and digest for GenLayer `CovenantGuard`.
 
 **Site:** <https://vincentofweb3.github.io/covctl/> · **Related:** [Covenant](https://github.com/vincentofweb3/covenant)
