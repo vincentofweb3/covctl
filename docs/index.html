@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>covctl — catch covenant defects before they cost you a verdict</title>
+<meta name="description" content="covctl compiles, lints and digests the written policies GenLayer models are asked to apply. Dependency-free. Its digest is byte-identical to CovenantGuard's on-chain hash.">
+<link rel="canonical" href="https://vincentofweb3.github.io/covctl/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="covctl — covenant compiler for GenLayer">
+<meta property="og:description" content="Catch covenant defects before deployment: unciteable clauses, indistinct clauses, and policies that permit nothing.">
+<meta property="og:url" content="https://vincentofweb3.github.io/covctl/">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23c2410c'/%3E%3Cpath d='M9 17l4 4 10-11' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="wordmark" href="#top" aria-label="covctl home">
+      <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M9 17l4 4 10-11" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>covctl</span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#problem">Problem</a>
+      <a href="#digest">Digest</a>
+      <a href="#commands">Commands</a>
+      <a class="btn btn-ghost" href="https://github.com/vincentofweb3/covctl" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">GenLayer developer tool</p>
+        <h1>Catch covenant defects before they cost you a verdict.</h1>
+        <p class="lede">
+          <strong>covctl</strong> compiles, lints and digests the written policies a
+          GenLayer model is asked to apply — before deployment, where the defects
+          are still cheap to fix.
+        </p>
+
+        <div class="install">
+          <div class="install-label">Install</div>
+          <div class="install-row">
+            <code id="install-cmd">pipx install git+https://github.com/vincentofweb3/covctl</code>
+            <button class="copy" data-copy="#install-cmd" aria-label="Copy install command">
+              <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 15V6a2 2 0 0 1 2-2h9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://github.com/vincentofweb3/covctl">Read the docs</a>
+          <a class="btn btn-quiet" href="https://github.com/vincentofweb3/covctl/blob/main/covctl.py">View source</a>
+        </div>
+
+        <p class="meta">30 tests · stdlib only · MIT</p>
+      </div>
+
+      <div class="terminal hero-terminal" aria-label="Example lint output">
+        <div class="terminal-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="terminal-title">covctl lint --strict</span>
+        </div>
+        <pre><code><span class="t-dim">$</span> covctl lint examples/covenant.md --strict
+<span class="t-info">INFO</span>    I020: 5 permitting and 2 prohibiting
+        clause(s). Confirm none address the same
+        subject; the model cannot resolve a genuine
+        contradiction and will pick one.
+
+5 clause(s), 451 chars
+<span class="t-ok">0 error(s)</span>, 0 warning(s), 1 info</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="problem">
+    <div class="wrap">
+      <p class="eyebrow">The failure is silent</p>
+      <h2>Three ways a covenant permits nothing.</h2>
+      <p class="section-lede">
+        CovenantGuard only honours an <code>ALLOWED</code> verdict whose excerpt is a
+        verbatim substring of the stored text, capped at 320 characters. That one
+        rule turns ordinary prose into three deployment hazards — none of which
+        produce an error at runtime. They produce downgraded verdicts.
+      </p>
+
+      <div class="cards">
+        <article class="card">
+          <span class="card-num">01</span>
+          <h3>Unciteable</h3>
+          <p>A clause longer than the excerpt cap can never be cited in full. Every ruling that depends on it degrades to <code>AMBIGUOUS</code>.</p>
+        </article>
+        <article class="card">
+          <span class="card-num">02</span>
+          <h3>Indistinct</h3>
+          <p>A clause too short to narrow the decision does not constrain the model. It reads like policy and behaves like noise.</p>
+        </article>
+        <article class="card">
+          <span class="card-num">03</span>
+          <h3>Permitted nothing</h3>
+          <p>A policy that only forbids cannot tell a compliant payment from a violation. The guard fails closed, forever.</p>
+        </article>
+      </div>
+
+      <p class="section-note">
+        It also rejects active control language at the boundary
+        (<code>ignore previous instructions</code>) and warns when two clauses
+        address the same subject in opposite directions.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="digest">
+    <div class="wrap digest-grid">
+      <div>
+        <p class="eyebrow">Byte for byte</p>
+        <h2>The digest is the contract&rsquo;s digest.</h2>
+        <p class="section-lede">
+          A compiler that prints the wrong hash is worse than no compiler: the
+          published digest would not match the deployment, and nobody would
+          notice until an auditor checked.
+        </p>
+        <p>
+          <code>covctl digest</code> reproduces
+          <code>covenant_guard._digest("covenant", [text])</code> exactly. The
+          value below is pinned in the test suite and matches the live
+          deployment&rsquo;s <code>get_covenant_hash</code>.
+        </p>
+        <div class="pinned">
+          <span class="pinned-label">Pinned digest</span>
+          <code class="pinned-hash">afd824702fd05cd7c277adf84d8d1c9feba669eeda8ba50681b67259d363837b</code>
+        </div>
+        <p class="link-row">
+          <a href="https://explorer-studio.genlayer.com/address/0xC5335e9A9F96fE77Ca8944E01e11085296E88556" rel="noopener">Live guard on the GenLayer explorer</a>
+          <span aria-hidden="true">·</span>
+          <a href="https://github.com/vincentofweb3/covctl/blob/main/tests/test_covctl.py" rel="noopener">The test that pins it</a>
+        </p>
+      </div>
+
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="terminal-title">digest formula</span>
+        </div>
+        <pre><code>payload = "|".join([
+    <span class="t-str">"covenant-sha256-v1"</span>,
+    <span class="t-str">"covenant"</span>,
+    covenant,
+])
+sha256(payload.encode(<span class="t-str">"utf-8"</span>))</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="commands">
+    <div class="wrap">
+      <p class="eyebrow">Five commands</p>
+      <h2>Small surface, sharp edges.</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th scope="col">Command</th><th scope="col">Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>lint PATH [--strict]</code></td><td>Report defects that would degrade or defeat rulings.</td></tr>
+            <tr><td><code>compile PATH</code></td><td>Emit parsed clauses and the digest as canonical JSON.</td></tr>
+            <tr><td><code>digest PATH</code></td><td>Print the digest the contract will compute.</td></tr>
+            <tr><td><code>check-excerpt PATH --excerpt TEXT</code></td><td>Apply the contract&rsquo;s exact citation test, locally.</td></tr>
+            <tr><td><code>selftest</code></td><td>Check the digest formula against <code>covenant_guard.py</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="two-up">
+        <div class="terminal">
+          <div class="terminal-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="terminal-title">accepted citation</span>
+          </div>
+          <pre><code><span class="t-dim">$</span> covctl check-excerpt examples/covenant.md \
+    --excerpt "Recurring monthly payments to an
+    approved vendor are permitted."
+<span class="t-ok">VALID: cited from Clause 2</span></code></pre>
+        </div>
+        <div class="terminal">
+          <div class="terminal-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="terminal-title">fabricated citation</span>
+          </div>
+          <pre><code><span class="t-dim">$</span> covctl check-excerpt examples/covenant.md \
+    --excerpt "Recurring payments to an approved
+    vendor are permitted."
+<span class="t-bad">INVALID: excerpt does not occur verbatim</span>
+        the contract would discard it and record
+        AMBIGUOUS / UNVERIFIED_EXCERPT</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="install">
+    <div class="wrap install-final">
+      <div>
+        <p class="eyebrow">Get started</p>
+        <h2>One file. No dependencies.</h2>
+        <p class="section-lede">
+          Run it straight from a clone, or install the <code>covctl</code>
+          command. Python 3.10 and up. Exit codes: <code>0</code> success,
+          <code>1</code> errors or a failed check.
+        </p>
+      </div>
+      <div class="install-stack">
+        <div class="install-row">
+          <code id="cmd-clone">git clone https://github.com/vincentofweb3/covctl</code>
+          <button class="copy" data-copy="#cmd-clone" aria-label="Copy clone command">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 15V6a2 2 0 0 1 2-2h9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="install-row">
+          <code id="cmd-run">python3 covctl.py lint examples/covenant.md</code>
+          <button class="copy" data-copy="#cmd-run" aria-label="Copy run command">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 15V6a2 2 0 0 1 2-2h9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p>
+      <strong>covctl</strong> is the tooling for
+      <a href="https://github.com/vincentofweb3/covenant" rel="noopener">Covenant</a>,
+      a semantic treasury guard for GenLayer.
+    </p>
+    <p class="footer-meta">
+      <span>MIT © 2026 vincentofweb3</span>
+      <a href="https://github.com/vincentofweb3/covctl" rel="noopener">GitHub</a>
+    </p>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

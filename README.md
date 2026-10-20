@@ -2,6 +2,8 @@
 
 A covenant compiler, policy linter and digest for GenLayer `CovenantGuard`.
 
+**Site:** <https://vincentofweb3.github.io/covctl/> · **Related:** [Covenant](https://github.com/vincentofweb3/covenant)
+
 `covctl` is a single-file, dependency-free CLI. It is meant to be run **before**
 a covenant is deployed, because the defects it catches are silent at runtime —
 they show up as downgraded verdicts, not errors.
