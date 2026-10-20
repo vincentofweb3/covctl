@@ -110,6 +110,11 @@ This checks the covenant **text**. It cannot tell you whether a model will read
 a clause the way you meant it — only that the clause is citable, distinctive and
 not self-contradictory. The runtime guarantees belong to the contract.
 
+## Related
+
+[Covenant](https://github.com/vincentofweb3/covenant) — the guard this tool
+checks covenants for, and the deployment that pins the digest above.
+
 ## Licence
 
 MIT. See [LICENSE](LICENSE).
