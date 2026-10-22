@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "covctl"
-version = "0.1.0"
+version = "0.2.0"
 description = "Covenant compiler, policy linter and digest for GenLayer CovenantGuard"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -25,3 +25,6 @@ covctl = "covctl:main"
 
 [tool.setuptools]
 py-modules = ["covctl"]
+
+[tool.setuptools.data-files]
+"share/covctl" = ["fixtures/covenant_guard_constants.json"]

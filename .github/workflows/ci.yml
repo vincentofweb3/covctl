@@ -23,6 +23,8 @@ jobs:
         run: python -m pytest -q
       - name: Lint the shipped example
         run: python covctl.py lint examples/covenant.md --strict
+      - name: Contract fixture parity
+        run: python covctl.py selftest
       - name: Digest is the pinned, on-chain value
         run: |
           python covctl.py digest examples/covenant.md \

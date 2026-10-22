@@ -60,7 +60,7 @@
           <a class="btn btn-quiet" href="https://github.com/vincentofweb3/covctl/blob/main/covctl.py">View source</a>
         </div>
 
-        <p class="meta">30 tests · stdlib only · MIT</p>
+        <p class="meta">76 tests · stdlib only · MIT</p>
       </div>
 
       <div class="terminal hero-terminal" aria-label="Example lint output">
@@ -74,7 +74,7 @@
         subject; the model cannot resolve a genuine
         contradiction and will pick one.
 
-5 clause(s), 451 chars
+5 clause(s), 451 chars (contract length)
 <span class="t-ok">0 error(s)</span>, 0 warning(s), 1 info</code></pre>
       </div>
     </div>
@@ -87,15 +87,17 @@
       <p class="section-lede">
         CovenantGuard only honours an <code>ALLOWED</code> verdict whose excerpt is a
         verbatim substring of the stored text, capped at 320 characters. That one
-        rule turns ordinary prose into three deployment hazards — none of which
-        produce an error at runtime. They produce downgraded verdicts.
+        rule turns ordinary prose into three deployment hazards. None of them
+        produces an error at runtime; they produce weak rules and downgraded
+        verdicts. <code>covctl</code> reports each at the severity the contract
+        actually implies.
       </p>
 
       <div class="cards">
         <article class="card">
           <span class="card-num">01</span>
           <h3>Unciteable</h3>
-          <p>A clause longer than the excerpt cap can never be cited in full. Every ruling that depends on it degrades to <code>AMBIGUOUS</code>.</p>
+          <p>A clause longer than the excerpt cap can only be cited in part: the contract truncates a citation at 320 characters, so a ruling may miss a condition in the tail.</p>
         </article>
         <article class="card">
           <span class="card-num">02</span>
@@ -111,8 +113,45 @@
 
       <p class="section-note">
         It also rejects active control language at the boundary
-        (<code>ignore previous instructions</code>) and warns when two clauses
-        address the same subject in opposite directions.
+        (<code>ignore previous instructions</code>) and flags covenants that both
+        permit and prohibit, where a collision would be unresolvable.
+      </p>
+    </div>
+  </section>
+
+
+  <section class="section" id="parity">
+    <div class="wrap">
+      <p class="eyebrow">Checked against the contract</p>
+      <h2>Parity is a fixture, not a promise.</h2>
+      <p class="section-lede">
+        CovenantGuard&rsquo;s constants, digest formula and excerpt rule are checked in
+        as a fixture with pinned provenance: repository, path, commit and sha256.
+        Every vector is re-derived independently in the test suite, so a bug shared
+        by the generator and the tool still fails.
+      </p>
+
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="terminal-title">covctl selftest</span>
+        </div>
+        <pre><code><span class="t-dim">$</span> covctl selftest
+<span class="t-ok">OK: 4 normalization, 6 digest and 9 excerpt
+    vectors match the contract</span>
+    fixture: covenant/contracts/covenant_guard.py
+             @ 0034b5e40a88
+    sha256:  e55b9c3f082c17a300506f1645d8a349
+             af5c11be70624e10dbf267d12bee2b12
+    contract source not present; verified
+    against the checked-in fixture</code></pre>
+      </div>
+
+      <p class="section-note">
+        No fixture means exit <code>1</code>, never a skip with a success code. If the
+        contract source is present and its sha256 differs from the pin, selftest fails.
+        Files are read with <code>newline=""</code>, so CRLF survives to the digest, and
+        the text is stripped exactly as the contract stores it.
       </p>
     </div>
   </section>
@@ -174,7 +213,7 @@ sha256(payload.encode(<span class="t-str">"utf-8"</span>))</code></pre>
             <tr><td><code>compile PATH</code></td><td>Emit parsed clauses and the digest as canonical JSON.</td></tr>
             <tr><td><code>digest PATH</code></td><td>Print the digest the contract will compute.</td></tr>
             <tr><td><code>check-excerpt PATH --excerpt TEXT</code></td><td>Apply the contract&rsquo;s exact citation test, locally.</td></tr>
-            <tr><td><code>selftest</code></td><td>Check the digest formula against <code>covenant_guard.py</code>.</td></tr>
+            <tr><td><code>selftest</code></td><td>Verify constants, digest and excerpt vectors against the pinned contract fixture. Fails closed.</td></tr>
           </tbody>
         </table>
       </div>
