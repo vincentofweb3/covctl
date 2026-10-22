@@ -60,7 +60,7 @@
           <a class="btn btn-quiet" href="https://github.com/vincentofweb3/covctl/blob/main/covctl.py">View source</a>
         </div>
 
-        <p class="meta">76 tests · stdlib only · MIT</p>
+        <p class="meta">78 tests · stdlib only · MIT</p>
       </div>
 
       <div class="terminal hero-terminal" aria-label="Example lint output">
@@ -142,16 +142,14 @@
     fixture: covenant/contracts/covenant_guard.py
              @ 0034b5e40a88
     sha256:  e55b9c3f082c17a300506f1645d8a349
-             af5c11be70624e10dbf267d12bee2b12
-    contract source not present; verified
-    against the checked-in fixture</code></pre>
+             af5c11be70624e10dbf267d12bee2b12</code></pre>
       </div>
 
       <p class="section-note">
-        No fixture means exit <code>1</code>, never a skip with a success code. If the
-        contract source is present and its sha256 differs from the pin, selftest fails.
-        Files are read with <code>newline=""</code>, so CRLF survives to the digest, and
-        the text is stripped exactly as the contract stores it.
+        No fixture means exit <code>1</code>, never a skip with a success code. The exact
+        contract source is vendored too, and selftest fails if its sha256 differs from the
+        pin. Files are read with <code>newline=""</code>, so CRLF survives to the digest,
+        and the text is stripped exactly as the contract stores it.
       </p>
     </div>
   </section>

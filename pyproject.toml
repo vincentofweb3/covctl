@@ -27,4 +27,7 @@ covctl = "covctl:main"
 py-modules = ["covctl"]
 
 [tool.setuptools.data-files]
-"share/covctl" = ["fixtures/covenant_guard_constants.json"]
+"share/covctl" = [
+  "fixtures/covenant_guard_constants.json",
+  "vendor/covenant_guard.py",
+]

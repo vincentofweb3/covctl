@@ -67,25 +67,29 @@ WARNING W030: the covenant says nothing about what to do when evidence is ambigu
 
 ## Contract parity
 
-The contract's observable surface is checked in as
+The exact contract source is vendored byte for byte at
+[`vendor/covenant_guard.py`](vendor/covenant_guard.py) (MIT, from Covenant at
+commit `0034b5e`), and its observable surface is checked in as
 [`fixtures/covenant_guard_constants.json`](fixtures/covenant_guard_constants.json).
-It records the source repository, path, commit and sha256, plus the four
-constants, four normalisation vectors, six digest vectors and nine excerpt
-vectors. Every digest and excerpt expectation is re-derived independently in
-[`tests/test_contract_parity.py`](tests/test_contract_parity.py), so a bug
-shared by the generator and the tool still fails.
+The fixture records the source repository, path, commit and sha256, plus the
+four constants, four normalisation vectors, six digest vectors and nine excerpt
+vectors.
+
+[`tests/test_contract_parity.py`](tests/test_contract_parity.py) re-derives
+every vector independently, parses the vendored source to extract the constants
+and checks the formula and limit code, so a bug shared by the generator and the
+tool still fails.
 
 ```console
 $ covctl selftest
 OK: 4 normalization, 6 digest and 9 excerpt vectors match the contract
     fixture: https://github.com/vincentofweb3/covenant/contracts/covenant_guard.py @ 0034b5e40a88
     sha256:  e55b9c3f082c17a300506f1645d8a349af5c11be70624e10dbf267d12bee2b12
-    contract source not present; verified against the checked-in fixture
 ```
 
-When the contract source is present, `selftest` also requires its sha256 to
-match the pinned provenance, so silent drift is a hard failure. When no fixture
-is found, it **exits 1** rather than skipping with a success code.
+`selftest` also requires the vendored source's sha256 to match the pinned
+provenance, so silent drift is a hard failure. When no fixture is found, it
+**exits 1** rather than skipping with a success code.
 
 Regenerate the fixture from the contract with:
 
