@@ -69,7 +69,7 @@ WARNING W030: the covenant says nothing about what to do when evidence is ambigu
 
 The exact contract source is vendored byte for byte at
 [`vendor/covenant_guard.py`](vendor/covenant_guard.py) (MIT, from Covenant at
-commit `0034b5e`), and its observable surface is checked in as
+commit `78c2fc9`), and its observable surface is checked in as
 [`fixtures/covenant_guard_constants.json`](fixtures/covenant_guard_constants.json).
 The fixture records the source repository, path, commit and sha256, plus the
 four constants, four normalisation vectors, six digest vectors and nine excerpt
@@ -83,8 +83,8 @@ tool still fails.
 ```console
 $ covctl selftest
 OK: 4 normalization, 6 digest and 9 excerpt vectors match the contract
-    fixture: https://github.com/vincentofweb3/covenant/contracts/covenant_guard.py @ 0034b5e40a88
-    sha256:  e55b9c3f082c17a300506f1645d8a349af5c11be70624e10dbf267d12bee2b12
+    fixture: https://github.com/vincentofweb3/covenant/contracts/covenant_guard.py @ 78c2fc9dcb89
+    sha256:  1f93c70522abe1252d2f9ab835c1bbf4460549a67c411c1433da1c083e8e9e1b
 ```
 
 `selftest` also requires the vendored source's sha256 to match the pinned
