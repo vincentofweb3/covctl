@@ -123,12 +123,14 @@ hashlib.sha256(payload.encode("utf-8")).hexdigest()
 This is the point of the tool. A compiler that prints the wrong hash is worse
 than no compiler, because the published digest would not match the deployed
 contract and nobody would notice until an auditor checked. The digest for
-`examples/covenant.md` is pinned in the test suite and matches the live
-deployment's `get_covenant_hash`:
+covctl's own `examples/covenant.md` is pinned in the test suite:
 
 ```
 afd824702fd05cd7c277adf84d8d1c9feba669eeda8ba50681b67259d363837b
 ```
+
+Covenant's current live demo uses a different six-clause covenant, so this pinned
+value is a compiler vector, not a claim about that deployment.
 
 ## Install
 
